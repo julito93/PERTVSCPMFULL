@@ -10,6 +10,12 @@
 						<th>ID</th>
 						<th>Task Name</th>
 						<th>Duration</th>
+						<th>Earliest Start</th>
+						<th>Earliest Finish</th>
+						<th>Latest Start</th>
+						<th>Latest Finish</th>
+						<th>Slack</th>
+
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -18,6 +24,11 @@
 						<td>{{task.id}}</td>
 						<td>{{task.name}}</td>
 						<td>{{task.duration}}</td>
+						<td>{{task.earliestStart}}</td>
+						<td>{{task.earliestFinish}}</td>
+						<td>{{task.latestStart}}</td>
+						<td>{{task.latestFinish}}</td>
+						<td>{{task.slack}}</td>
 						<td>
 							<button (click)="update(task)" class="btn btn-warning">edit</button>
 							<button class="btn btn-danger">Delete</button>

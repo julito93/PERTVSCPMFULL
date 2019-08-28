@@ -14,7 +14,12 @@ export class AddComponent implements OnInit {
   {
     id:0,
     name:"",
-    duration:0
+    duration:0,
+    earliestStart:0,
+    earliestFinish:0,
+    latestStart:0,
+    latestFinish:0,
+	  slack:0
   };
  
   constructor(private router:Router, private service:ServiceService) { }
