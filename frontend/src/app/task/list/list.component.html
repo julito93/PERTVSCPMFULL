@@ -1,0 +1,30 @@
+<div class="container">
+	<div class="card">
+		<div class="card-header">
+			<h3>Tasks</h3>
+		</div>
+		<div class="card-body">
+			<table class="table table-bordered" width="100%" cellspacing="0">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Task Name</th>
+						<th>Duration</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let task of tasks" class="text-center">
+						<td>{{task.id}}</td>
+						<td>{{task.name}}</td>
+						<td>{{task.duration}}</td>
+						<td>
+							<button (click)="update(task)" class="btn btn-warning">edit</button>
+							<button class="btn btn-danger">Delete</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

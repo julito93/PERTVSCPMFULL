@@ -1,0 +1,22 @@
+<div class="container col-md-6">
+	<div class="card">
+		<div class="card-header">
+			<h3>Edit Tasks</h3>
+		</div>
+		<div class="card-body">
+			<form action="">
+				<div class="form-group">
+					<label for="">name:</label>
+					<input [(ngModel)]="task.name" [ngModelOptions]="{standalone: true}" placeholder="name"
+						class="form-control" type="text">
+				</div>
+				<div class="form-group">
+					<label for="">duration:</label>
+					<input [(ngModel)]="task.duration" [ngModelOptions]="{standalone: true}" placeholder="duration"
+						type="number" class="form-control">
+				</div>
+				<button (click)="update(task)" class="btn btn-danger">update</button>
+			</form>
+		</div>
+	</div>
+</div>
