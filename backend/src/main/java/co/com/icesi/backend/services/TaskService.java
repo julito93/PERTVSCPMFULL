@@ -2,8 +2,6 @@ package co.com.icesi.backend.services;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import co.com.icesi.backend.model.Task;
 
 

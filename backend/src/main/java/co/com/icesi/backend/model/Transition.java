@@ -2,18 +2,6 @@ package co.com.icesi.backend.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import co.com.icesi.backend.businessLogic.TransitionBO;
-
-@Entity
-@Table(name = "Transition")
 public class Transition implements Serializable {
 
 	/**
@@ -21,12 +9,23 @@ public class Transition implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	@JsonManagedReference
-	private TransitionId id;
+	private Task predecesor;
 
-	@Column
+	private Task succesor;
+
 	private String type;
+
+	
+	
+	public Transition() {
+		super();
+	}
+
+	public Transition(Task predecesor, Task succesor) {
+		super();
+		this.predecesor = predecesor;
+		this.succesor = succesor;
+	}
 
 	public String getType() {
 		return type;
@@ -36,12 +35,20 @@ public class Transition implements Serializable {
 		this.type = type;
 	}
 
-	public TransitionId getId() {
-		return id;
+	public Task getPredecesor() {
+		return predecesor;
 	}
 
-	public void setId(TransitionId id) {
-		this.id = id;
+	public void setPredecesor(Task predecesor) {
+		this.predecesor = predecesor;
+	}
+
+	public Task getSuccessor() {
+		return succesor;
+	}
+
+	public void setSuccessor(Task successor) {
+		this.succesor = successor;
 	}
 
 	@Override
@@ -56,15 +63,9 @@ public class Transition implements Serializable {
 			return false;
 
 		Transition other = (Transition) obj;
-		if (other.id == null)
-			return false;
 
-		return this.id.equals(other.id);
-	}
-
-	public TransitionBO toBO() {
-		// TODO Auto-generated method stub
-		return new TransitionBO(id.getPredecesor().toBO(), id.getSuccessor().toBO(), type);
+		return this.predecesor.getName().equals(other.getPredecesor().getName())
+				&& this.succesor.getName().equals(other.getSuccessor().getName());
 	}
 
 }

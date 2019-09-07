@@ -11,14 +11,12 @@ import co.com.icesi.backend.services.TaskService;
 
 @Service
 public class TaskServiceImp implements TaskService {
-
 	
 	@Autowired
 	private TaskRepository repo;
 	
 	@Override
 	public List<Task> list() {
-		
 		return repo.findAll();
 	}
 

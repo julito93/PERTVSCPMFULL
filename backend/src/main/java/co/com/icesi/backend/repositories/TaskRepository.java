@@ -2,11 +2,10 @@ package co.com.icesi.backend.repositories;
 
 import java.util.List;
 
-import org.springframework.data.repository.Repository;
 
 import co.com.icesi.backend.model.Task;
 
-public interface TaskRepository extends Repository<Task, Integer>{
+public interface TaskRepository /*extends Repository<Task, Integer>*/{
 
 	List<Task> findAll();
 	

@@ -16,30 +16,39 @@ import co.com.icesi.backend.model.Task;
 import co.com.icesi.backend.services.TaskService;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-@RequestMapping({ "/tasks" })
+@RequestMapping(
+{ "/tasks" })
 @RestController
-public class TaskController {
+public class TaskController
+{
 
 	@Autowired
 	TaskService service;
 
 	@GetMapping
-	public List<Task> list() {
+	public List<Task> list()
+	{
+
 		return service.list();
 	}
 
 	@PostMapping
-	public Task addTask(@RequestBody Task task) {
+	public Task addTask(@RequestBody Task task)
+	{
 		return service.add(task);
 	}
 
-	@GetMapping(path = { "/{id}" })
-	public Task listById(@PathVariable("id") int id) {
+	@GetMapping(path =
+	{ "/{id}" })
+	public Task listById(@PathVariable("id") int id)
+	{
 		return service.findById(id);
 	}
 
-	@PutMapping(path = { "/{id}" })
-	public Task update(@RequestBody Task task, @PathVariable("id") int id) {
+	@PutMapping(path =
+	{ "/{id}" })
+	public Task update(@RequestBody Task task, @PathVariable("id") int id)
+	{
 		task.setId(id);
 		return service.edit(task);
 	}
