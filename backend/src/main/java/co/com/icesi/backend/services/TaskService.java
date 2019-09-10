@@ -66,7 +66,8 @@ public interface TaskService {
 	 * <b>Post:</b> The earliest start for every task in the list of tasks is updated with the computed values
 	 * @param tasks - tasks with respective transitions
 	 * @param start - the starting task must not have any predecessor
+	 * @param finish - the starting task must not have any predecessor
 	 * @return the list of tasks with the new earliest times computed
 	 */
-	List<Task> executeCPM(List<Task> tasks, Task start);
+	List<Task> executeCPM(List<Task> tasks, Task start, Task finish);
 }

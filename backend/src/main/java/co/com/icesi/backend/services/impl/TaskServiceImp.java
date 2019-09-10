@@ -65,7 +65,6 @@ public class TaskServiceImp implements TaskService
 		return toDelete;
 	}
 
-	
 	@Override
 	public List<Task> computeEarliestTimes(List<Task> tasks, Task start)
 	{
@@ -87,40 +86,37 @@ public class TaskServiceImp implements TaskService
 		return tasks;
 	}
 
-	
 	@Override
 	public List<Task> computeLatestTimesAndSlack(List<Task> tasks, Task finish)
 	{
 		Queue<Task> taskQueue = new LinkedList<Task>();
 		finish.setLatestFinish(finish.getEarliestFinish());
-		finish.setLatestStart(finish.getLatestFinish()-finish.getDuration());
-		finish.setSlack(finish.getLatestFinish()-finish.getEarliestFinish());
-		
+		finish.setLatestStart(finish.getLatestFinish() - finish.getDuration());
+		finish.setSlack(finish.getLatestFinish() - finish.getEarliestFinish());
+		finish.setIsCritical(true);
 		List<Transition> lv1Edges = finish.getPredecessors();
 		queuePredecessors(taskQueue, lv1Edges);
-	
+
 		while (taskQueue.peek() != null)
 		{
-			Task cursor = taskQueue.poll();			
+			Task cursor = taskQueue.poll();
 			double minSuccessorDuration = getMinSuccessorLS(cursor.getSuccessors());
 			cursor.setLatestFinish(minSuccessorDuration);
 			cursor.setLatestStart(minSuccessorDuration - cursor.getDuration());
-			cursor.setSlack(cursor.getLatestFinish()- cursor.getEarliestFinish());
-			cursor.setIsCritical(cursor.getSlack()==0.0);
+			cursor.setSlack(cursor.getLatestFinish() - cursor.getEarliestFinish());
+			cursor.setIsCritical(cursor.getSlack() == 0.0);
 			List<Transition> nextLevel = cursor.getPredecessors();
 			queuePredecessors(taskQueue, nextLevel);
 		}
 		return tasks;
 	}
 
-	
-	
 	/**
 	 * 
 	 * @param predecessors
 	 * @return
 	 */
-	
+
 	private double getMaxPredecesorES(List<Transition> predecessors)
 	{
 		Task maxTask = predecessors.get(0).getId().getPredecesor();
@@ -130,7 +126,7 @@ public class TaskServiceImp implements TaskService
 			Task cursor = predecessors.get(i).getId().getPredecesor();
 			double maxCursor = 0.0;
 			if (cursor.getEarliestStart() == null)
-				maxCursor = getMaxPredecesorES(cursor.getPredecessors())+ cursor.getDuration();
+				maxCursor = getMaxPredecesorES(cursor.getPredecessors()) + cursor.getDuration();
 			else
 				maxCursor = cursor.getEarliestStart() + cursor.getDuration();
 			max = (maxCursor > max) ? maxCursor : max;
@@ -138,7 +134,6 @@ public class TaskServiceImp implements TaskService
 		return max;
 	}
 
-	
 	/**
 	 * @param sucessors
 	 * @return
@@ -152,7 +147,7 @@ public class TaskServiceImp implements TaskService
 			Task cursor = sucessors.get(i).getId().getSuccessor();
 			double minCursor = 0.0;
 			if (cursor.getLatestFinish() == null)
-				minCursor = getMinSuccessorLS(cursor.getSuccessors())- cursor.getDuration();
+				minCursor = getMinSuccessorLS(cursor.getSuccessors()) - cursor.getDuration();
 			else
 				minCursor = cursor.getLatestFinish() - cursor.getDuration();
 			min = (minCursor < min) ? minCursor : min;
@@ -177,7 +172,7 @@ public class TaskServiceImp implements TaskService
 
 		return taskQueue;
 	}
-	
+
 	/**
 	 * Add the list of predecessors to the task queue
 	 * 
@@ -197,10 +192,12 @@ public class TaskServiceImp implements TaskService
 	}
 
 	@Override
-	public List<Task> executeCPM(List<Task> tasks, Task start)
+	public List<Task> executeCPM(List<Task> tasks, Task start, Task finish)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		computeEarliestTimes(tasks, start);
+		computeLatestTimesAndSlack(tasks, finish);
+		
+		return tasks;
 	}
 
 }
