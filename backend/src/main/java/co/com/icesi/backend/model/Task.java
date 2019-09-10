@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import co.com.icesi.backend.businessLogic.TaskBO;
+import co.com.icesi.backend.business.TaskBO;
 
 /**
  * @author jcampaz
@@ -50,6 +50,9 @@ public class Task
 
 	@Column(nullable = true)
 	private Double slack;
+	
+	@Column(nullable = true, name = "ISCRITICAL")
+	private Boolean isCritical;
 
 	@OneToMany(mappedBy = "id.predecesor", fetch = FetchType.EAGER)
 	@JsonManagedReference
@@ -199,6 +202,22 @@ public class Task
 	
 
 	/**
+	 * @return the isCritical
+	 */
+	public Boolean getIsCritical()
+	{
+		return isCritical;
+	}
+
+	/**
+	 * @param isCritical the isCritical to set
+	 */
+	public void setIsCritical(Boolean isCritical)
+	{
+		this.isCritical = isCritical;
+	}
+
+	/**
 	 * @return the Successors
 	 */
 	public List<Transition> getSuccessors()
@@ -222,6 +241,8 @@ public class Task
 		return predecessors;
 	}
 
+	
+	
 	/**
 	 * @param predecessors the predecessors to set
 	 */

@@ -14,6 +14,10 @@ import co.com.icesi.backend.model.Transition;
 import co.com.icesi.backend.repositories.TaskRepository;
 import co.com.icesi.backend.services.TaskService;
 
+/**
+ * @author jcampaz
+ *
+ */
 @Service
 public class TaskServiceImp implements TaskService
 {
@@ -61,8 +65,9 @@ public class TaskServiceImp implements TaskService
 		return toDelete;
 	}
 
+	
 	@Override
-	public List<Task> computeEarliestDates(List<Task> tasks, Task start)
+	public List<Task> computeEarliestTimes(List<Task> tasks, Task start)
 	{
 		Queue<Task> taskQueue = new LinkedList<Task>();
 		start.setEarliestStart(0.0);
@@ -82,6 +87,40 @@ public class TaskServiceImp implements TaskService
 		return tasks;
 	}
 
+	
+	@Override
+	public List<Task> computeLatestTimesAndSlack(List<Task> tasks, Task finish)
+	{
+		Queue<Task> taskQueue = new LinkedList<Task>();
+		finish.setLatestFinish(finish.getEarliestFinish());
+		finish.setLatestStart(finish.getLatestFinish()-finish.getDuration());
+		finish.setSlack(finish.getLatestFinish()-finish.getEarliestFinish());
+		
+		List<Transition> lv1Edges = finish.getPredecessors();
+		queuePredecessors(taskQueue, lv1Edges);
+	
+		while (taskQueue.peek() != null)
+		{
+			Task cursor = taskQueue.poll();			
+			double minSuccessorDuration = getMinSuccessorLS(cursor.getSuccessors());
+			cursor.setLatestFinish(minSuccessorDuration);
+			cursor.setLatestStart(minSuccessorDuration - cursor.getDuration());
+			cursor.setSlack(cursor.getLatestFinish()- cursor.getEarliestFinish());
+			cursor.setIsCritical(cursor.getSlack()==0.0);
+			List<Transition> nextLevel = cursor.getPredecessors();
+			queuePredecessors(taskQueue, nextLevel);
+		}
+		return tasks;
+	}
+
+	
+	
+	/**
+	 * 
+	 * @param predecessors
+	 * @return
+	 */
+	
 	private double getMaxPredecesorES(List<Transition> predecessors)
 	{
 		Task maxTask = predecessors.get(0).getId().getPredecesor();
@@ -97,6 +136,28 @@ public class TaskServiceImp implements TaskService
 			max = (maxCursor > max) ? maxCursor : max;
 		}
 		return max;
+	}
+
+	
+	/**
+	 * @param sucessors
+	 * @return
+	 */
+	private double getMinSuccessorLS(List<Transition> sucessors)
+	{
+		Task minTask = sucessors.get(0).getId().getSuccessor();
+		double min = minTask.getLatestFinish() - minTask.getDuration();
+		for (int i = 1; i < sucessors.size(); i++)
+		{
+			Task cursor = sucessors.get(i).getId().getSuccessor();
+			double minCursor = 0.0;
+			if (cursor.getLatestFinish() == null)
+				minCursor = getMinSuccessorLS(cursor.getSuccessors())- cursor.getDuration();
+			else
+				minCursor = cursor.getLatestFinish() - cursor.getDuration();
+			min = (minCursor < min) ? minCursor : min;
+		}
+		return min;
 	}
 
 	/**
@@ -136,44 +197,10 @@ public class TaskServiceImp implements TaskService
 	}
 
 	@Override
-	public List<Task> computeLatestDates(List<Task> tasks, Task finish)
+	public List<Task> executeCPM(List<Task> tasks, Task start)
 	{
-		Queue<Task> taskQueue = new LinkedList<Task>();
-		finish.setLatestFinish(finish.getEarliestFinish());
-		finish.setLatestStart(finish.getLatestFinish()-finish.getDuration());
-		
-		List<Transition> lv1Edges = finish.getPredecessors();
-		queuePredecessors(taskQueue, lv1Edges);
-
-		while (taskQueue.peek() != null)
-		{
-			Task cursor = taskQueue.poll();
-			LOG.debug("visiting " + cursor.getName());
-			
-			double minSuccessorDuration = getMinSuccessorLS(cursor.getSuccessors());
-			cursor.setLatestFinish(minSuccessorDuration);
-			cursor.setLatestStart(minSuccessorDuration - cursor.getDuration());
-			List<Transition> nextLevel = cursor.getPredecessors();
-			queueSuccessors(taskQueue, nextLevel);
-		}
-		return tasks;
-	}
-
-	private double getMinSuccessorLS(List<Transition> sucessors)
-	{
-		Task minTask = sucessors.get(0).getId().getSuccessor();
-		double min = minTask.getLatestFinish() - minTask.getDuration();
-		for (int i = 1; i < sucessors.size(); i++)
-		{
-			Task cursor = sucessors.get(i).getId().getSuccessor();
-			double minCursor = 0.0;
-			if (cursor.getLatestFinish() == null)
-				minCursor = getMinSuccessorLS(cursor.getSuccessors())- cursor.getDuration();
-			else
-				minCursor = cursor.getLatestFinish() - cursor.getDuration();
-			min = (minCursor < min) ? minCursor : min;
-		}
-		return min;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

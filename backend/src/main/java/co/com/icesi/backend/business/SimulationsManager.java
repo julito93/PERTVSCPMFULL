@@ -1,4 +1,4 @@
-package co.com.icesi.backend.businessLogic;
+package co.com.icesi.backend.business;
 
 import java.util.ArrayList;
 import java.util.List;
