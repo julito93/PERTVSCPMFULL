@@ -148,6 +148,8 @@ public class TaskServiceImp implements TaskService
 		while (taskQueue.peek() != null)
 		{
 			Task cursor = taskQueue.poll();
+			LOG.debug("visiting " + cursor.getName());
+			
 			double minSuccessorDuration = getMinSuccessorLS(cursor.getSuccessors());
 			cursor.setLatestFinish(minSuccessorDuration);
 			cursor.setLatestStart(minSuccessorDuration - cursor.getDuration());
