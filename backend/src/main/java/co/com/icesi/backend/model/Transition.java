@@ -5,16 +5,16 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import co.com.icesi.backend.businessLogic.TransitionBO;
-
+/**
+ * @author jcampaz
+ *
+ */
 @Entity
 @Table(name = "Transition")
-public class Transition implements Serializable {
+public class Transition implements Serializable
+{
 
 	/**
 	 * 
@@ -22,30 +22,48 @@ public class Transition implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	@JsonManagedReference
 	private TransitionId id;
 
 	@Column
 	private String type;
 
-	public String getType() {
+	public String getType()
+	{
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(String type)
+	{
 		this.type = type;
 	}
 
-	public TransitionId getId() {
+	public TransitionId getId()
+	{
 		return id;
 	}
 
-	public void setId(TransitionId id) {
+	public void setId(TransitionId id)
+	{
 		this.id = id;
 	}
 
+	
+	
+	public Transition()
+	{
+		super();
+	}
+
+	public Transition(TransitionId id, String type)
+	{
+		super();
+		this.id = id;
+		this.type = type;
+	}
+
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 
@@ -62,9 +80,11 @@ public class Transition implements Serializable {
 		return this.id.equals(other.id);
 	}
 
-	public TransitionBO toBO() {
-		// TODO Auto-generated method stub
-		return new TransitionBO(id.getPredecesor().toBO(), id.getSuccessor().toBO(), type);
+	@Override
+	public String toString()
+	{
+		return "Transition [id=" + id.getPredecesor().getName() + " -> "+id.getSuccessor().getName()+"]";
 	}
-
+	
+	
 }

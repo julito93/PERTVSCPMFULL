@@ -1,9 +1,7 @@
 package co.com.icesi.backend.businessLogic;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class SimulationsManager {
 
@@ -72,11 +70,11 @@ public class SimulationsManager {
 	 */
 	private void computeEarliestStartDate() {
 		
-		Queue<TransitionBO> startingEdges =new LinkedList<TransitionBO>(start.getTransitions());
-		
-		for (TransitionBO edge : startingEdges) {
-			 
-		}
+//		Queue<TransitionBO> startingEdges =new LinkedList<TransitionBO>(start.getTransitions());
+//		
+//		for (TransitionBO edge : startingEdges) {
+//			 
+//		}
 		
 	}
 
@@ -102,6 +100,16 @@ public class SimulationsManager {
 		computeEarliestStartDate();
 		computeLatestStartDate();
 
+	}
+
+	public TaskBO getStart()
+	{
+		return start;
+	}
+
+	public void setStart(TaskBO start)
+	{
+		this.start = start;
 	}
 
 }

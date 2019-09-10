@@ -1,16 +1,18 @@
 package co.com.icesi.backend.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.com.icesi.backend.businessLogic.TaskBO;
 
@@ -18,13 +20,10 @@ import co.com.icesi.backend.businessLogic.TaskBO;
  * @author jcampaz
  *
  */
-/**
- * @author jcampaz
- *
- */
 @Entity
 @Table(name = "Tasks")
-public class Task {
+public class Task
+{
 
 	@Id
 	@Column
@@ -52,145 +51,194 @@ public class Task {
 	@Column(nullable = true)
 	private Double slack;
 
-	@OneToMany
-	@JsonBackReference
-	private List<Transition> transitions;
+	@OneToMany(mappedBy = "id.predecesor", fetch = FetchType.EAGER)
+	@JsonManagedReference
+	private List<Transition> Successors;
+	
+	
+	@OneToMany(mappedBy = "id.successor", fetch = FetchType.EAGER)
+	@JsonManagedReference
+	private List<Transition> predecessors;
 
 	
-	
-	public Task() {
+	public Task()
+	{
 		super();
+		Successors = new ArrayList<Transition>();
+		predecessors = new ArrayList<Transition>();
 	}
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 * @param name
 	 * @param duration
 	 */
-	public Task(int id, String name, Double duration) {
+	public Task(int id, String name, Double duration)
+	{
 		super();
 		this.id = id;
 		this.name = name;
 		this.duration = duration;
-		
+		Successors = new ArrayList<Transition>();
+		predecessors = new ArrayList<Transition>();
+
 	}
 
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public Double getDuration() {
+	public Double getDuration()
+	{
 		return duration;
 	}
 
-	public void setDuration(Double duration) {
+	public void setDuration(Double duration)
+	{
 		this.duration = duration;
 	}
 
 	/**
 	 * @return the earliestStart
 	 */
-	public Double getEarliestStart() {
+	public Double getEarliestStart()
+	{
 		return earliestStart;
 	}
 
 	/**
 	 * @param earliestStart the earliestStart to set
 	 */
-	public void setEarliestStart(Double earliestStart) {
+	public void setEarliestStart(Double earliestStart)
+	{
 		this.earliestStart = earliestStart;
 	}
 
 	/**
 	 * @return the earliestFinish
 	 */
-	public Double getEarliestFinish() {
+	public Double getEarliestFinish()
+	{
 		return earliestFinish;
 	}
 
 	/**
 	 * @param earliestFinish the earliestFinish to set
 	 */
-	public void setEarliestFinish(Double earliestFinish) {
+	public void setEarliestFinish(Double earliestFinish)
+	{
 		this.earliestFinish = earliestFinish;
 	}
 
 	/**
 	 * @return the latestStart
 	 */
-	public Double getLatestStart() {
+	public Double getLatestStart()
+	{
 		return latestStart;
 	}
 
 	/**
 	 * @param latestStart the latestStart to set
 	 */
-	public void setLatestStart(Double latestStart) {
+	public void setLatestStart(Double latestStart)
+	{
 		this.latestStart = latestStart;
 	}
 
 	/**
 	 * @return the latestFinish
 	 */
-	public Double getLatestFinish() {
+	public Double getLatestFinish()
+	{
 		return latestFinish;
 	}
 
 	/**
 	 * @param latestFinish the latestFinish to set
 	 */
-	public void setLatestFinish(Double latestFinish) {
+	public void setLatestFinish(Double latestFinish)
+	{
 		this.latestFinish = latestFinish;
 	}
 
 	/**
 	 * @return the slack
 	 */
-	public Double getSlack() {
+	public Double getSlack()
+	{
 		return slack;
 	}
 
 	/**
 	 * @param slack the slack to set
 	 */
-	public void setSlack(Double slack) {
+	public void setSlack(Double slack)
+	{
 		this.slack = slack;
 	}
 
+	
+
 	/**
-	 * @return the transitions
+	 * @return the Successors
 	 */
-	public List<Transition> getTransitions() {
-		return transitions;
+	public List<Transition> getSuccessors()
+	{
+		return Successors;
 	}
 
 	/**
-	 * @param transitions the transitions to set
+	 * @param Successors the Successors to set
 	 */
-	public void setTransitions(List<Transition> transitions) {
-		this.transitions = transitions;
+	public void setSuccessors(List<Transition> Successors)
+	{
+		this.Successors = Successors;
+	}
+
+	/**
+	 * @return the predecessors
+	 */
+	public List<Transition> getPredecessors()
+	{
+		return predecessors;
+	}
+
+	/**
+	 * @param predecessors the predecessors to set
+	 */
+	public void setPredecessors(List<Transition> predecessors)
+	{
+		this.predecessors = predecessors;
 	}
 
 	@Override
-	public String toString() {
-		return "Task [id=" + id + "]";
+	public String toString()
+	{
+		return "Task [id=" + id +" name: "+ name+"]";
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
@@ -198,7 +246,8 @@ public class Task {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -211,7 +260,8 @@ public class Task {
 		return true;
 	}
 
-	public TaskBO toBO() {
+	public TaskBO toBO()
+	{
 		return new TaskBO(id, name, duration);
 	}
 }

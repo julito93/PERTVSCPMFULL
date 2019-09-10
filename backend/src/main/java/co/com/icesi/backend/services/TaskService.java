@@ -2,8 +2,6 @@ package co.com.icesi.backend.services;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import co.com.icesi.backend.model.Task;
 
 
@@ -18,4 +16,8 @@ public interface TaskService {
 	Task edit(Task task);
 	
 	Task delete(int id);
+
+	List<Task> computeEarliestDates(List<Task> tasks, Task start);
+	
+	List<Task> computeLatestDates(List<Task> tasks, Task finish);
 }

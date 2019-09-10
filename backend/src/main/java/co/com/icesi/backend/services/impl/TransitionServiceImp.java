@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.icesi.backend.model.Transition;
+import co.com.icesi.backend.model.TransitionId;
 import co.com.icesi.backend.repositories.TransitionRepository;
 import co.com.icesi.backend.services.TransitionService;
 
@@ -22,7 +23,7 @@ public class TransitionServiceImp implements TransitionService {
 	}
 
 	@Override
-	public Transition findById(int id) {
+	public Transition findById(TransitionId id) {
 		// TODO Auto-generated method stub
 		return repo.findById(id);
 	}
