@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
 
 import co.com.icesi.backend.model.Task;
+import co.com.icesi.backend.model.Transition;
 
 @Repository
 public class TaskRepositoryImp implements TaskRepository
@@ -31,6 +33,8 @@ public class TaskRepositoryImp implements TaskRepository
 	ResourceLoader resourceLoader;
 
 	private Map<Integer, Task> tasks = new HashMap<Integer, Task>();
+	
+	List<Transition> loaded = new ArrayList<Transition>();
 
 	@Override
 	public List<Task> findAll()
@@ -44,16 +48,34 @@ public class TaskRepositoryImp implements TaskRepository
 
 				String line;
 
-				while ((line = reader.readLine()) != null)
+				while ((line = reader.readLine()) != null&&!line.startsWith("-"))
 				{
 					String[] data = line.split(":");
 					int id = Integer.parseInt(data[0]);
 					String name = data[1];
 					double duration = Double.valueOf(data[2]);
-
 					Task task = new Task(id, name, duration);
 					tasks.put(id, task);
 				}
+				
+				while ((line = reader.readLine()) != null)
+				{
+					String[] data = line.split(":");
+					int id = Integer.parseInt(data[0]);
+					String[] succesorsIds = data[1].split(",");
+					Task taskPredecessor=findById(id);
+					for (String successorId : succesorsIds)
+					{
+						Task taskSuccessor=findById(Integer.parseInt(successorId));
+						Transition edge=new Transition(taskPredecessor, taskSuccessor);
+						taskPredecessor.getSuccessors().add(edge);
+						taskSuccessor.getPredecessors().add(edge);
+						
+						loaded.add(edge);
+					}
+				}
+				
+				
 			}
 			catch (FileNotFoundException e)
 			{

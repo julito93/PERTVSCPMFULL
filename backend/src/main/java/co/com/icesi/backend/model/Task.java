@@ -1,6 +1,10 @@
 package co.com.icesi.backend.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * @author jcampaz
@@ -29,12 +33,20 @@ public class Task
 	private Double latestFinish;
 
 	private Double slack;
+	
+	private Boolean isCritical;
 
-	private List<Transition> transitions;
+	@JsonBackReference
+	private List<Transition> Successors;
+	
+	@JsonBackReference
+	private List<Transition> predecessors;
 
 	public Task()
 	{
 		super();
+		Successors = new ArrayList<Transition>();
+		predecessors = new ArrayList<Transition>();
 	}
 
 	/**
@@ -50,6 +62,8 @@ public class Task
 		this.id = id;
 		this.name = name;
 		this.duration = duration;
+		Successors = new ArrayList<Transition>();
+		predecessors = new ArrayList<Transition>();
 
 	}
 
@@ -163,26 +177,62 @@ public class Task
 		this.slack = slack;
 	}
 
+	
+
 	/**
-	 * @return the transitions
+	 * @return the isCritical
 	 */
-	public List<Transition> getTransitions()
+	public Boolean getIsCritical()
 	{
-		return transitions;
+		return isCritical;
 	}
 
 	/**
-	 * @param transitions the transitions to set
+	 * @param isCritical the isCritical to set
 	 */
-	public void setTransitions(List<Transition> transitions)
+	public void setIsCritical(Boolean isCritical)
 	{
-		this.transitions = transitions;
+		this.isCritical = isCritical;
+	}
+
+	/**
+	 * @return the Successors
+	 */
+	public List<Transition> getSuccessors()
+	{
+		return Successors;
+	}
+
+	/**
+	 * @param Successors the Successors to set
+	 */
+	public void setSuccessors(List<Transition> Successors)
+	{
+		this.Successors = Successors;
+	}
+
+	/**
+	 * @return the predecessors
+	 */
+	public List<Transition> getPredecessors()
+	{
+		return predecessors;
+	}
+
+	
+	
+	/**
+	 * @param predecessors the predecessors to set
+	 */
+	public void setPredecessors(List<Transition> predecessors)
+	{
+		this.predecessors = predecessors;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "Task [id= " + id + " name: " + name + " duration: " + duration + "]";
+		return "Task [id=" + id +" name: "+ name+"]";
 	}
 
 	@Override
@@ -208,5 +258,4 @@ public class Task
 			return false;
 		return true;
 	}
-
 }

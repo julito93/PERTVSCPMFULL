@@ -2,57 +2,70 @@ package co.com.icesi.backend.model;
 
 import java.io.Serializable;
 
-public class Transition implements Serializable {
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+public class Transition implements Serializable
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@JsonManagedReference
 	private Task predecesor;
 
+	@JsonManagedReference
 	private Task succesor;
 
 	private String type;
 
-	
-	
-	public Transition() {
+	public Transition()
+	{
 		super();
 	}
 
-	public Transition(Task predecesor, Task succesor) {
+	public Transition(Task predecesor, Task succesor)
+	{
 		super();
 		this.predecesor = predecesor;
 		this.succesor = succesor;
+		this.type = "FS";
 	}
 
-	public String getType() {
+	public String getType()
+	{
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(String type)
+	{
 		this.type = type;
 	}
 
-	public Task getPredecesor() {
+	public Task getPredecesor()
+	{
 		return predecesor;
 	}
 
-	public void setPredecesor(Task predecesor) {
+	public void setPredecesor(Task predecesor)
+	{
 		this.predecesor = predecesor;
 	}
 
-	public Task getSuccessor() {
+	public Task getSuccessor()
+	{
 		return succesor;
 	}
 
-	public void setSuccessor(Task successor) {
+	public void setSuccessor(Task successor)
+	{
 		this.succesor = successor;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 
@@ -66,6 +79,12 @@ public class Transition implements Serializable {
 
 		return this.predecesor.getName().equals(other.getPredecesor().getName())
 				&& this.succesor.getName().equals(other.getSuccessor().getName());
+	}
+
+	@Override
+	public String toString()
+	{
+		return "TransitionId [predecesor=" + predecesor.getName() + ", successor=" + succesor.getName() + "]";
 	}
 
 }
