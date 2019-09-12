@@ -1,9 +1,16 @@
 package co.com.icesi.backend.services.impl;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
+import org.apache.commons.math3.distribution.AbstractRealDistribution;
+import org.apache.commons.math3.distribution.BetaDistribution;
+import org.apache.commons.math3.distribution.LogNormalDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +29,12 @@ import co.com.icesi.backend.services.TaskService;
 public class TaskServiceImp implements TaskService
 {
 
-	Logger LOG = LoggerFactory.getLogger(TaskServiceImp.class);
+	static final Logger LOG = LoggerFactory.getLogger(TaskServiceImp.class);
+
+	public enum DistributionType
+	{
+		NORMAL_DISTRIBUTION, BETA_DISTRIBUTION, LOG_NORMAL_DISTRIBUTION, UNIFORM_DISTRIBUTION
+	}
 
 	@Autowired
 	private TaskRepository repo;
@@ -196,6 +208,52 @@ public class TaskServiceImp implements TaskService
 	{
 		computeEarliestTimes(tasks, start);
 		computeLatestTimesAndSlack(tasks, finish);
+
+		return tasks;
+	}
+
+	@Override
+	public Map<Integer, List<Task>> generateScenarios(List<Task> tasks, int numberOfScenarios, double param1,
+			double param2, DistributionType distType)
+	{
+		Map<Integer, List<Task>> scenarios = new HashMap<Integer, List<Task>>(numberOfScenarios);
+
+		AbstractRealDistribution distribution;
+
+		switch (distType)
+		{
+		case NORMAL_DISTRIBUTION:
+			distribution = new NormalDistribution(param1, param2);
+			break;
+		case BETA_DISTRIBUTION:
+			distribution = new BetaDistribution(param1, param2);
+			break;
+		case LOG_NORMAL_DISTRIBUTION:
+			distribution = new LogNormalDistribution(param1, param2);
+			break;
+		case UNIFORM_DISTRIBUTION:
+			distribution = new UniformRealDistribution(param1, param2);
+			break;
+		default:
+			distribution = new NormalDistribution();
+			break;
+		}
+
+		for (int i = 0; i < numberOfScenarios; i++)
+		{
+			generateScenario(tasks, distribution);
+		}
+
+		return scenarios;
+	}
+
+	private List<Task> generateScenario(List<Task> tasks, AbstractRealDistribution dist)
+	{
+
+		for (Task task : tasks)
+		{
+			
+		}
 
 		return tasks;
 	}
