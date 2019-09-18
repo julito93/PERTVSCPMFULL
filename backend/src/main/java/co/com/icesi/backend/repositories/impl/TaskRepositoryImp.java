@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.InitBinder;
 
 import co.com.icesi.backend.model.Task;
 import co.com.icesi.backend.model.Transition;
@@ -44,8 +42,8 @@ public class TaskRepositoryImp implements TaskRepository
 		return tasks.values().stream().collect(Collectors.toList());
 	}
 
-	@InitBinder
-	private void loadTasksFromFile()
+	
+	public void loadTasksFromFile()
 	{
 		// TODO Auto-generated method stub
 		Resource graph = resourceLoader.getResource("classpath:graph.txt");
@@ -84,15 +82,11 @@ public class TaskRepositoryImp implements TaskRepository
 			}
 			catch (FileNotFoundException e)
 			{
-
 				e.printStackTrace();
-
 			}
 			catch (IOException e)
 			{
-
 				e.printStackTrace();
-
 			}
 		}
 	}
@@ -100,10 +94,10 @@ public class TaskRepositoryImp implements TaskRepository
 	@Override
 	public Task findById(int id)
 	{
-		if (!tasks.isEmpty())
+		if (tasks.isEmpty())
+			findAll();
+		
 			return tasks.get(id);
-		else
-			return findAll().get(id);
 	}
 
 	@Override
