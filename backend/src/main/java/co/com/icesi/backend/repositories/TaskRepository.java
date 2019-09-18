@@ -5,7 +5,7 @@ import java.util.List;
 
 import co.com.icesi.backend.model.Task;
 
-public interface TaskRepository /*extends Repository<Task, Integer>*/{
+public interface TaskRepository{
 
 	List<Task> findAll();
 	

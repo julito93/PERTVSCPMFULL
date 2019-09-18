@@ -52,23 +52,4 @@ public class TaskController
 		task.setId(id);
 		return service.edit(task);
 	}
-
-//	/**
-//	 * return an array of DTO(data transfer object) version of the existing tasks
-//	 * 
-//	 * @return empty list if there is no tasks in the database.
-//	 */
-//	public List<TaskBO> getTasksBO() {
-//		List<TaskBO> tasksBO = new ArrayList<TaskBO>();
-//		List<Task> tasks = list();
-//		if (!tasks.isEmpty()) {
-//
-//			for (Task task : tasks) {
-//				tasksBO.add(task.toBO());
-//
-//			}
-//		}
-//		return tasksBO;
-//	}
-
 }

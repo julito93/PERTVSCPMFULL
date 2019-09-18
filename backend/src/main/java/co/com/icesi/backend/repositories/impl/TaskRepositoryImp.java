@@ -1,4 +1,4 @@
-package co.com.icesi.backend.repositories;
+package co.com.icesi.backend.repositories.impl;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,27 +19,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import co.com.icesi.backend.model.Task;
 import co.com.icesi.backend.model.Transition;
+import co.com.icesi.backend.repositories.TaskRepository;
 
 @Repository
 public class TaskRepositoryImp implements TaskRepository
 {
-	
+
 	private final Logger LOG = LoggerFactory.getLogger(TaskRepositoryImp.class);
 
 	@Autowired
 	ResourceLoader resourceLoader;
 
 	private Map<Integer, Task> tasks = new HashMap<Integer, Task>();
-	
-	List<Transition> loaded = new ArrayList<Transition>();
 
 	@Override
 	public List<Task> findAll()
 	{
+		loadTasksFromFile();
 
+		return tasks.values().stream().collect(Collectors.toList());
+	}
+
+	@InitBinder
+	private void loadTasksFromFile()
+	{
+		// TODO Auto-generated method stub
 		Resource graph = resourceLoader.getResource("classpath:graph.txt");
 		if (tasks.isEmpty())
 		{
@@ -48,7 +56,7 @@ public class TaskRepositoryImp implements TaskRepository
 
 				String line;
 
-				while ((line = reader.readLine()) != null&&!line.startsWith("-"))
+				while ((line = reader.readLine()) != null && !line.startsWith("-"))
 				{
 					String[] data = line.split(":");
 					int id = Integer.parseInt(data[0]);
@@ -57,25 +65,22 @@ public class TaskRepositoryImp implements TaskRepository
 					Task task = new Task(id, name, duration);
 					tasks.put(id, task);
 				}
-				
+
 				while ((line = reader.readLine()) != null)
 				{
 					String[] data = line.split(":");
 					int id = Integer.parseInt(data[0]);
 					String[] succesorsIds = data[1].split(",");
-					Task taskPredecessor=findById(id);
+					Task taskPredecessor = findById(id);
 					for (String successorId : succesorsIds)
 					{
-						Task taskSuccessor=findById(Integer.parseInt(successorId));
-						Transition edge=new Transition(taskPredecessor, taskSuccessor);
+						Task taskSuccessor = findById(Integer.parseInt(successorId));
+						Transition edge = new Transition(taskPredecessor, taskSuccessor);
 						taskPredecessor.getSuccessors().add(edge);
 						taskSuccessor.getPredecessors().add(edge);
-						
-						loaded.add(edge);
 					}
 				}
-				
-				
+
 			}
 			catch (FileNotFoundException e)
 			{
@@ -90,7 +95,6 @@ public class TaskRepositoryImp implements TaskRepository
 
 			}
 		}
-		return tasks.values().stream().collect(Collectors.toList());
 	}
 
 	@Override
@@ -120,12 +124,12 @@ public class TaskRepositoryImp implements TaskRepository
 		}
 		Resource graph = resourceLoader.getResource("classpath:graph.txt");
 
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(graph.getFile(),true)))
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(graph.getFile(), true)))
 		{
 			String taskString = "" + task.getId() + ":" + task.getName() + ":" + task.getDuration() + ":";
 			writer.write(taskString);
 			writer.flush();
-			LOG.info("Added the task"+task.toString());
+			LOG.info("Added the task" + task.toString());
 		}
 		catch (FileNotFoundException e)
 		{

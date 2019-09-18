@@ -2,7 +2,7 @@ package co.com.icesi.backend.model;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 public class Transition implements Serializable
 {
@@ -12,10 +12,10 @@ public class Transition implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+	@JsonBackReference
 	private Task predecesor;
 
-	
+	@JsonBackReference
 	private Task succesor;
 
 	private String type;
@@ -84,7 +84,7 @@ public class Transition implements Serializable
 	@Override
 	public String toString()
 	{
-		return "TransitionId [predecesor=" + predecesor.getName() + ", successor=" + succesor.getName() + "]";
+		return "[" + predecesor.getName() + "=>" + succesor.getName() + "]";
 	}
 
 }
