@@ -52,4 +52,14 @@ public class TaskController
 		task.setId(id);
 		return service.edit(task);
 	}
+	
+	@GetMapping(path =
+		{ "/criticalPathMethod/{startId}/{endId}" })
+		public List<Task> criticalPathMethod(@PathVariable("startId") int startId,@PathVariable("endId") int endId)
+		{
+			List<Task> tasks = service.list();
+			Task start =service.findById(startId);
+			Task finish =service.findById(endId);
+			return service.executeCPM(tasks, start, finish);
+		}
 }

@@ -153,7 +153,12 @@ public class TaskServiceImp implements TaskService
 	private double getMinSuccessorLS(List<Transition> sucessors)
 	{
 		Task minTask = sucessors.get(0).getSuccessor();
-		double min = minTask.getLatestFinish() - minTask.getDuration();
+		double min;
+		if(minTask.getLatestFinish()!=null)
+		min= minTask.getLatestFinish() - minTask.getDuration();
+		else
+			min = getMinSuccessorLS(minTask.getSuccessors());
+
 		for (int i = 1; i < sucessors.size(); i++)
 		{
 			Task cursor = sucessors.get(i).getSuccessor();
